@@ -1,4 +1,6 @@
-﻿
+﻿' Mimics the same functionality of Ctrl+C plus Ctrl+V without any selection to copy and paste
+' the current line but without messing the clipboard.
+
 Imports System
 Imports EnvDTE
 Imports EnvDTE80
@@ -7,7 +9,6 @@ Imports EnvDTE90a
 Imports EnvDTE100
 Imports System.Diagnostics
 
-' Duplicates the current line above or below without messing the clipboard
 Public Module DuplicateLine
 
     Sub DuplicateLineDown()
