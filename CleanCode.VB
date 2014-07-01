@@ -48,6 +48,7 @@ Public Module CleanCode
                 result = .ReplacePattern("^:b*\/\/\/\/\/\/\/\/\/\/*\n\n", "", vsFindOptions.vsFindOptionsRegularExpression) Or result
                 result = .ReplacePattern("^:b*\/\/\/\/\/.*\/\/\/\/\/*$", "", vsFindOptions.vsFindOptionsRegularExpression) Or result
                 result = .ReplacePattern("^:b*\/\/----------*\n", "", vsFindOptions.vsFindOptionsRegularExpression) Or result
+                result = .ReplacePattern("\#ifndef Q_MOC_RUN.*\n{\#include.*\n}\#endif.*\n", "#if !defined(Q_MOC_RUN)\n\1#endif\n", vsFindOptions.vsFindOptionsRegularExpression) Or result
                 result = .ReplacePattern("\#ifndef.*\n{\#include.*\n}\#endif.*\n", "\1", vsFindOptions.vsFindOptionsRegularExpression) Or result
                 result = .ReplacePattern("^\n\n", "\n", vsFindOptions.vsFindOptionsRegularExpression) Or result
                 result = .ReplacePattern("(void)", "()") Or result
