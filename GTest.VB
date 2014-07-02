@@ -7,7 +7,25 @@ Imports EnvDTE100
 Imports System.Diagnostics
 
 Public Module GTest
-    Sub RunCurrentGTest()
+    Public Sub RunCurrentFixture()
+        SetCurrentFixture()
+        DTE.ExecuteCommand("Debug.StartWithoutDebugging")
+    End Sub
+
+    Public Sub RunCurrentTest()
+        SetCurrentTest()
+        DTE.ExecuteCommand("Debug.StartWithoutDebugging")
+    End Sub
+
+    Public Sub SetCurrentFixture()
+        SetCurrent(True)
+    End Sub
+
+    Public Sub SetCurrentTest()
+        SetCurrent(False)
+    End Sub
+
+    Private Sub SetCurrent(ByVal Fixture As Boolean)
         ' From the active source file, find the test that the user wants to run
         ' based on the current cursor position. Set the project containing this
         ' source file as the startup project, changes the command line to run
@@ -30,7 +48,9 @@ Public Module GTest
             Dim match As System.Text.RegularExpressions.Match = System.Text.RegularExpressions.Regex.Match(selection.Text, "TEST[_FP]*\((.*),(.*)\)")
             If Not match Is System.Text.RegularExpressions.Match.Empty Then
                 TestGroup = match.Groups.Item(1).Value.Trim()
-                TestName = match.Groups.Item(2).Value.Trim()
+                If Not Fixture Then
+                    TestName = match.Groups.Item(2).Value.Trim()
+                End If
                 Exit While
             End If
             line = line - 1
@@ -57,13 +77,6 @@ Public Module GTest
         Dim StartupProject As String
         StartupProject = Proj.UniqueName
         SoluBuild.StartupProjects = StartupProject
-
-        ' Build it.
-        ' SoluBuild.BuildProject(config.ConfigurationName, Proj.UniqueName, True)
-
-        ' Start it.
-        DTE.ExecuteCommand("Debug.StartWithoutDebugging")
-
     End Sub
 
 End Module
