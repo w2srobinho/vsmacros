@@ -60,7 +60,7 @@ Public Module CleanCode
             Dim editPoint As EditPoint = doc.StartPoint.CreateEditPoint
             editPoint.EndOfDocument()
             If editPoint.LineLength <> 0 Then
-                editPoint.Insert(Chr(13))
+                editPoint.Insert(vbNewLine)
                 result = True
             Else
                 editPoint.LineUp(1)
