@@ -21,6 +21,8 @@ Public Module CleanCode
     '   * Includes a blank line at EOF;
     '   * Removes blank lines from EOF;
     '   * Removes the guard (#ifdef...#endif) from "#pragma once" (newer compilers are compliant or ingnores it).
+    '   * Replaces occurences of NULL by nullptr
+    '   * Formats assignments with a space before to be search friendly on cursor
     Sub CleanCode()
         DoCleanCode()
     End Sub
@@ -54,6 +56,8 @@ Public Module CleanCode
                 result = .ReplacePattern("(void)", "()") Or result
                 result = .ReplacePattern("TEST{(_F|_P)*}\({.*},:b*[tT]est_*{.*}\)", "TEST\1(\2, \3)", vsFindOptions.vsFindOptionsRegularExpression) Or result
                 result = .ReplacePattern("\n\#if defined\(_MSC_VER\) \&\& \(_MSC_VER \>\= [0-9]*\)\n\#:b*pragma once\n\#endif", "#pragma once", vsFindOptions.vsFindOptionsRegularExpression) Or result
+                result = .ReplacePattern("<NULL>", "nullptr", vsFindOptions.vsFindOptionsRegularExpression) Or result
+                result = .ReplacePattern("{:a}= ", "\1 = ", vsFindOptions.vsFindOptionsRegularExpression) Or result
             End With
 
             ' Includes a blank line at end of file
