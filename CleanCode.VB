@@ -80,9 +80,9 @@ Public Module CleanCode
                 result = .ReplacePattern("^:b*\/\/\/\/\/\/\/\/\/\/*\n\n", "", vsFindOptions.vsFindOptionsRegularExpression) Or result
                 result = .ReplacePattern("^:b*\/\/\/\/\/.*\/\/\/\/\/*$", "", vsFindOptions.vsFindOptionsRegularExpression) Or result
                 result = .ReplacePattern("^:b*\/\/----------*\n", "", vsFindOptions.vsFindOptionsRegularExpression) Or result
-                result = .ReplacePattern("\#ifndef Q_MOC_RUN.*\n{\#include.*\n}\#endif.*\n", "#if !defined(Q_MOC_RUN)\n\1#endif\n", vsFindOptions.vsFindOptionsRegularExpression) Or result
+                result = .ReplacePattern("\#ifndef Q_MOC_RUN.*\n{\#include.*\n}\#endif.*\n", "#if !defined(Q_MOC_RUN)" + vbNewLine + "\1#endif" + vbNewLine, vsFindOptions.vsFindOptionsRegularExpression) Or result
                 result = .ReplacePattern("\#ifndef.*\n{\#include.*\n}\#endif.*\n", "\1", vsFindOptions.vsFindOptionsRegularExpression) Or result
-                result = .ReplacePattern("^\n\n", "\n", vsFindOptions.vsFindOptionsRegularExpression) Or result
+                result = .ReplacePattern("^\n\n*", vbNewLine, vsFindOptions.vsFindOptionsRegularExpression) Or result
                 result = .ReplacePattern("(void)", "()") Or result
                 result = .ReplacePattern("TEST{(_F|_P)*}\({.*},:b*[tT]est_*{.*}\)", "TEST\1(\2, \3)", vsFindOptions.vsFindOptionsRegularExpression) Or result
                 result = .ReplacePattern("\n\#if defined\(_MSC_VER\) \&\& \(_MSC_VER \>\= [0-9]*\)\n\#:b*pragma once\n\#endif", "#pragma once", vsFindOptions.vsFindOptionsRegularExpression) Or result
