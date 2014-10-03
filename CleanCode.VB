@@ -35,6 +35,36 @@ Public Module CleanCode
         Return doc.ReplacePattern("\t", "   ", vsFindOptions.vsFindOptionsRegularExpression)
     End Function
 
+    Public Function TranslateCHeadersToCppHeaders(ByVal doc As TextDocument) As Boolean
+        Dim headers() As String = { _
+            "assert.h", "cassert", _
+            "ctype.h", "cctype", _
+            "errno.h", "cerrno", _
+            "float.h", "cfloat", _
+            "iso646.h", "ciso646", _
+            "limits.h", "climits", _
+            "locale.h", "clocale", _
+            "math.h", "cmath", _
+            "setjmp.h", "csetjmp", _
+            "signal.h", "csignal", _
+            "stdarg.h", "cstdarg", _
+            "stddef.h", "cstddef", _
+            "stdio.h", "cstdio", _
+            "stdlib.h", "cstdlib", _
+            "string.h", "cstring", _
+            "time.h", "ctime", _
+            "wchar.h", "cwchar", _
+            "wctype.h", "cwctype"}
+
+        Dim result As Boolean = False
+        For i As Integer = LBound(headers) To UBound(headers) Step 2
+            Dim pattern As String = "\#include:b*[""\<]" + headers(i) + "[\>""]"
+            Dim replace As String = "\#include <" + headers(i + 1) + ">"
+            result = doc.ReplacePattern(pattern, replace, vsFindOptions.vsFindOptionsRegularExpression) Or result
+        Next
+        Return result
+    End Function
+
     Public Function DoCleanCode() As Boolean
 
         Dim doc As TextDocument
@@ -58,6 +88,7 @@ Public Module CleanCode
                 result = .ReplacePattern("\n\#if defined\(_MSC_VER\) \&\& \(_MSC_VER \>\= [0-9]*\)\n\#:b*pragma once\n\#endif", "#pragma once", vsFindOptions.vsFindOptionsRegularExpression) Or result
                 result = .ReplacePattern("<NULL>", "nullptr", vsFindOptions.vsFindOptionsRegularExpression) Or result
                 result = .ReplacePattern("{:a}= ", "\1 = ", vsFindOptions.vsFindOptionsRegularExpression) Or result
+                result = TranslateCHeadersToCppHeaders(doc) Or result
             End With
 
             ' Includes a blank line at end of file
